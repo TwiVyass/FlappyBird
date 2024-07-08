@@ -35,9 +35,12 @@ let cursors;
 let hasBumped = false;
 let isGameStarted = false;
 let messageToPlayer;
+let bg1, bg2;
+
 
 function create() {
-    this.add.image(400, 300, 'background');
+    bg1 = this.add.image(400, 300, 'background');
+    bg2 = this.add.image(1200, 300,'background')
 
     const roads = this.physics.add.staticGroup();
     const topColumns = this.physics.add.staticGroup({
@@ -82,12 +85,21 @@ function create() {
 }
 
 function update() {
+
     if (cursors.up.isDown && !hasLanded && !hasBumped && isGameStarted) {
         bird.setVelocityY(-160);
     }
 
     if (!hasLanded && !hasBumped && isGameStarted) {
         bird.body.velocity.x = 50;
+        bg1.x -= 2;
+        bg2.x -=2;
+        if (bg1.x < -400) {
+            bg1.x = bg2.x + 750;
+        }
+        if (bg2.x < -400) {
+            bg2.x = bg1.x + 750;
+        }
     } else {
         bird.body.velocity.x = 0;
     }
@@ -105,5 +117,9 @@ function update() {
     if (bird.x > 750 && isGameStarted) {
         bird.body.velocity.x = 40;
         messageToPlayer.text = `Congrats! You won!`;
+    }
+
+    if (bird.x > 750) {
+        bird.x = 0; // Wrap around to the left side
     }
 }
